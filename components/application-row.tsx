@@ -1,7 +1,7 @@
 import { History, Pencil, Trash2 } from "lucide-react";
 
-import { StatusBadgeSelect } from "@/components/huntr/status-badge-select";
-import { SentimentSelect } from "@/components/huntr/sentiment-select";
+import { StatusBadgeSelect } from "@/components/status-badge-select";
+import { SentimentSelect } from "@/components/sentiment-select";
 import { Button } from "@/components/ui/button";
 import {
   Select,

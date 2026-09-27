@@ -52,9 +52,15 @@ export type Application = {
   learning: string;
 };
 
-export const previousStorageKey = "huntr-applications-v2";
-export const storageKey = "huntr-applications-v3";
-export const hideClosedStorageKey = "huntr-hide-closed";
+export const storageKey = "jobtrackr-applications-v3";
+export const hideClosedStorageKey = "jobtrackr-hide-closed";
+
+const legacyStorageKeys = [
+  "huntr-applications-v2",
+  "huntr-applications-v3",
+  "huntr-hide-closed",
+  "huntr-theme",
+];
 
 export const currentStages: CurrentStage[] = [
   "applied",
@@ -484,7 +490,7 @@ export const parseImportedApplications = (
   }
   if (!Array.isArray(parsed)) {
     throw new Error(
-      "This file is not a Huntr export. Use a JSON file created with Export data.",
+      "This file is not a JobTrackr export. Use a JSON file created with Export data.",
     );
   }
   if (parsed.length > IMPORT_LIMITS.maxApplications) {
@@ -502,7 +508,7 @@ export const parseImportedApplications = (
   });
   if (!migrated.length) {
     throw new Error(
-      "This file is not a Huntr export. Use a JSON file created with Export data.",
+      "This file is not a JobTrackr export. Use a JSON file created with Export data.",
     );
   }
   return migrated;
@@ -512,23 +518,12 @@ export const loadApplications = (
   seed: Application[],
   todayISO: string,
 ): Application[] => {
+  for (const key of legacyStorageKeys) localStorage.removeItem(key);
   const current = localStorage.getItem(storageKey);
   if (current) {
     try {
       const migrated = parseApplicationsPayload(
         JSON.parse(current),
-        todayISO,
-      );
-      if (migrated.length) return migrated;
-    } catch {
-      /* fall through */
-    }
-  }
-  const previous = localStorage.getItem(previousStorageKey);
-  if (previous) {
-    try {
-      const migrated = parseApplicationsPayload(
-        JSON.parse(previous),
         todayISO,
       );
       if (migrated.length) return migrated;

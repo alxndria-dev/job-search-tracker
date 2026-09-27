@@ -3,7 +3,7 @@
 import { FormEvent, useEffect, useState } from "react";
 import { Trash2 } from "lucide-react";
 
-import { Field, TextAreaField } from "@/components/huntr/form-fields";
+import { Field, TextAreaField } from "@/components/form-fields";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,

@@ -1,4 +1,4 @@
-export const themeStorageKey = "huntr-theme";
+export const themeStorageKey = "jobtrackr-theme";
 
 export const themeInitScript = `(function(){try{if(localStorage.getItem(${JSON.stringify(themeStorageKey)})==="dark")document.documentElement.classList.add("dark")}catch(e){}})()`;
 

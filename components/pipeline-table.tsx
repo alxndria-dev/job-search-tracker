@@ -1,7 +1,9 @@
-import { Search } from "lucide-react";
+import { useRef } from "react";
+import { Download, Plus, Search, Upload } from "lucide-react";
 
-import { ApplicationRow } from "@/components/huntr/application-row";
-import { SortableHead } from "@/components/huntr/sortable-head";
+import { ApplicationRow } from "@/components/application-row";
+import { SortableHead } from "@/components/sortable-head";
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -55,6 +57,9 @@ export function PipelineTable({
   onSentimentChange,
   onTimeline,
   onDelete,
+  onExport,
+  onImport,
+  onAdd,
 }: {
   applications: Application[];
   query: string;
@@ -74,17 +79,57 @@ export function PipelineTable({
   onSentimentChange: (id: string, sentiment: Sentiment) => void;
   onTimeline: (id: string) => void;
   onDelete: (application: Application) => void;
+  onExport: () => void;
+  onImport: (file: File) => void;
+  onAdd: () => void;
 }) {
+  const fileInput = useRef<HTMLInputElement>(null);
   return (
     <Card className="mt-5" id="pipeline">
-      <CardHeader className="gap-4 sm:flex-row sm:items-end sm:justify-between">
-        <div>
-          <CardDescription className="font-mono text-[11px] tracking-[0.08em] uppercase">
-            Pipeline
-          </CardDescription>
-          <CardTitle>Applications</CardTitle>
+      <CardHeader className="gap-4">
+        <div className="flex flex-col justify-between gap-3 sm:flex-row sm:items-start">
+          <div>
+            <CardDescription className="font-mono text-[11px] tracking-[0.08em] uppercase">
+              Pipeline
+            </CardDescription>
+            <CardTitle>Applications</CardTitle>
+          </div>
+          <div className="flex w-full flex-wrap gap-2.5 sm:w-auto sm:justify-end">
+            <input
+              ref={fileInput}
+              type="file"
+              accept="application/json,.json"
+              className="sr-only"
+              aria-label="Import applications JSON"
+              onChange={(event) => {
+                const file = event.target.files?.[0];
+                if (file) onImport(file);
+                event.target.value = "";
+              }}
+            />
+            <Button
+              variant="outline"
+              className="flex-1 sm:flex-none"
+              onClick={() => fileInput.current?.click()}
+            >
+              <Upload />
+              Import data
+            </Button>
+            <Button
+              variant="outline"
+              className="flex-1 sm:flex-none"
+              onClick={onExport}
+            >
+              <Download />
+              Export data
+            </Button>
+            <Button className="flex-1 sm:flex-none" onClick={onAdd}>
+              <Plus />
+              Add application
+            </Button>
+          </div>
         </div>
-        <div className="flex w-full flex-wrap gap-2.5 sm:w-auto">
+        <div className="flex w-full flex-wrap gap-2.5">
           <div className="relative min-w-0 flex-1 sm:min-w-52">
             <Search className="pointer-events-none absolute top-1/2 left-2.5 size-4 -translate-y-1/2 text-muted-foreground" />
             <Input

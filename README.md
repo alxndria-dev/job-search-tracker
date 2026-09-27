@@ -1,4 +1,4 @@
-# Huntr
+# JobTrackr
 
 A local-first job application tracker built with Next.js, React, and TypeScript.
 

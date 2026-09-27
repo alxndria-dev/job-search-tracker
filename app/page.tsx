@@ -1,15 +1,15 @@
 "use client";
 
-import { ApplicationDialog } from "@/components/huntr/application-dialog";
-import { DeleteApplicationDialog } from "@/components/huntr/delete-application-dialog";
+import { ApplicationDialog } from "@/components/application-dialog";
+import { DeleteApplicationDialog } from "@/components/delete-application-dialog";
 import {
   ImportErrorDialog,
   ImportReplaceDialog,
-} from "@/components/huntr/import-dialogs";
-import { MetricsCards } from "@/components/huntr/metrics-cards";
-import { PageHeader } from "@/components/huntr/page-header";
-import { PipelineTable } from "@/components/huntr/pipeline-table";
-import { TimelineDialog } from "@/components/huntr/timeline-dialog";
+} from "@/components/import-dialogs";
+import { MetricsCards } from "@/components/metrics-cards";
+import { PageHeader } from "@/components/page-header";
+import { PipelineTable } from "@/components/pipeline-table";
+import { TimelineDialog } from "@/components/timeline-dialog";
 import { useApplications } from "@/hooks/use-applications";
 import { blank } from "@/lib/pipeline";
 
@@ -55,11 +55,7 @@ export default function Home() {
 
   return (
     <main className="mx-auto max-w-7xl px-4 py-8 pb-16 sm:px-7">
-      <PageHeader
-        onExport={exportData}
-        onImport={importData}
-        onAdd={() => setEditing(blank())}
-      />
+      <PageHeader />
       <MetricsCards
         activeCount={active.length}
         due={due}
@@ -97,6 +93,9 @@ export default function Home() {
         onSentimentChange={updateSentiment}
         onTimeline={setTimelineId}
         onDelete={setPendingDelete}
+        onExport={exportData}
+        onImport={importData}
+        onAdd={() => setEditing(blank())}
       />
       <ApplicationDialog
         application={editing}

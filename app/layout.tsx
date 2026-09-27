@@ -7,7 +7,7 @@ import { themeInitScript } from "@/lib/theme";
 const geist = Geist({ subsets: ["latin"], variable: "--font-sans" });
 
 export const metadata: Metadata = {
-  title: "Huntr — Job Search Tracker",
+  title: "JobTrackr — Job Search Tracker",
   description:
     "A local-first job application tracker that keeps the pipeline honest.",
 };

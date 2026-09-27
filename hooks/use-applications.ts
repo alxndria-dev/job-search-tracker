@@ -183,7 +183,7 @@ export function useApplications() {
     });
     const link = document.createElement("a");
     link.href = URL.createObjectURL(blob);
-    link.download = `huntr-backup-${toISO(today)}.json`;
+    link.download = `jobtrackr-backup-${toISO(today)}.json`;
     link.click();
     URL.revokeObjectURL(link.href);
   };
