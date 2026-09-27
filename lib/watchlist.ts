@@ -1,6 +1,11 @@
-import { IMPORT_LIMITS, jobUrlHref, toISO } from "@/lib/applications";
+import {
+  type Application,
+  IMPORT_LIMITS,
+  jobUrlHref,
+  toISO,
+} from "@/lib/applications";
 import { offset, today } from "@/lib/dates";
-import { type Application, blank } from "@/lib/pipeline";
+import { blank } from "@/lib/pipeline";
 
 export type WatchlistItem = {
   id: string;
