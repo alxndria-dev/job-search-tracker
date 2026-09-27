@@ -2,15 +2,9 @@ import { useRef } from "react";
 import { Download, Plus, Search, Upload } from "lucide-react";
 
 import { ApplicationRow } from "@/components/application-row";
+import { PipelinePanel, type PipelineView } from "@/components/pipeline-tabs";
 import { SortableHead } from "@/components/sortable-head";
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
@@ -60,6 +54,8 @@ export function PipelineTable({
   onExport,
   onImport,
   onAdd,
+  view,
+  onViewChange,
 }: {
   applications: Application[];
   query: string;
@@ -82,19 +78,16 @@ export function PipelineTable({
   onExport: () => void;
   onImport: (file: File) => void;
   onAdd: () => void;
+  view: PipelineView;
+  onViewChange: (view: PipelineView) => void;
 }) {
   const fileInput = useRef<HTMLInputElement>(null);
   return (
-    <Card className="mt-5" id="pipeline">
-      <CardHeader className="gap-4">
-        <div className="flex flex-col justify-between gap-3 sm:flex-row sm:items-start">
-          <div>
-            <CardDescription className="font-mono text-[11px] tracking-[0.08em] uppercase">
-              Pipeline
-            </CardDescription>
-            <CardTitle>Applications</CardTitle>
-          </div>
-          <div className="flex w-full flex-wrap gap-2.5 sm:w-auto sm:justify-end">
+    <PipelinePanel
+      view={view}
+      onViewChange={onViewChange}
+      toolbar={
+        <>
             <input
               ref={fileInput}
               type="file"
@@ -127,8 +120,9 @@ export function PipelineTable({
               <Plus />
               Add application
             </Button>
-          </div>
-        </div>
+        </>
+      }
+      filters={
         <div className="flex w-full flex-wrap gap-2.5">
           <div className="relative min-w-0 flex-1 sm:min-w-52">
             <Search className="pointer-events-none absolute top-1/2 left-2.5 size-4 -translate-y-1/2 text-muted-foreground" />
@@ -194,10 +188,10 @@ export function PipelineTable({
             </Label>
           </div>
         </div>
-      </CardHeader>
-      <CardContent>
+      }
+    >
         <Table className="min-w-[920px]">
-          <TableHeader>
+          <TableHeader className="sticky top-0 z-10 bg-card">
             <TableRow>
               <SortableHead
                 column="opportunity"
@@ -266,7 +260,6 @@ export function PipelineTable({
             )}
           </TableBody>
         </Table>
-      </CardContent>
-    </Card>
+    </PipelinePanel>
   );
 }

@@ -4,6 +4,11 @@ import { StatusBadgeSelect } from "@/components/status-badge-select";
 import { SentimentSelect } from "@/components/sentiment-select";
 import { Button } from "@/components/ui/button";
 import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import {
   Select,
   SelectContent,
   SelectItem,
@@ -23,6 +28,33 @@ import {
   statusFromApplication,
 } from "@/lib/applications";
 import { fitItems, fitScores, stageItems } from "@/lib/select-options";
+
+const nextActionPreviewLength = 100;
+
+function NextActionCell({ value }: { value: string }) {
+  if (!value) {
+    return <em className="text-muted-foreground">Not defined</em>;
+  }
+  const truncated = value.length > nextActionPreviewLength;
+  const preview = truncated
+    ? `${value.slice(0, nextActionPreviewLength)}…`
+    : value;
+  if (!truncated) return preview;
+  return (
+    <Tooltip>
+      <TooltipTrigger
+        delay={0}
+        closeOnClick={false}
+        className="inline max-w-xs cursor-default whitespace-normal p-0 text-left font-normal"
+      >
+        {preview}
+      </TooltipTrigger>
+      <TooltipContent className="max-w-sm text-left whitespace-normal">
+        {value}
+      </TooltipContent>
+    </Tooltip>
+  );
+}
 
 export function ApplicationRow({
   application: app,
@@ -132,9 +164,7 @@ export function ApplicationRow({
         </div>
       </TableCell>
       <TableCell className="max-w-xs whitespace-normal">
-        {app.nextAction || (
-          <em className="text-muted-foreground">Not defined</em>
-        )}
+        <NextActionCell value={app.nextAction} />
       </TableCell>
       <TableCell className="text-muted-foreground tabular-nums">
         {formatDayMonth(app.followUpDate) || "—"}

@@ -78,7 +78,7 @@ export function MetricsCards({
   ] as const;
 
   return (
-    <section className="mt-5 grid grid-cols-1 gap-3.5 sm:grid-cols-2 lg:grid-cols-4">
+    <section className="mt-5 grid shrink-0 grid-cols-1 gap-3.5 sm:grid-cols-2 lg:grid-cols-4">
       {cards.map((card) => (
         <button
           key={card.id}

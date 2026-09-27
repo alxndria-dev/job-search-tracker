@@ -1,7 +1,10 @@
 "use client";
 
+import { useEffect, useState } from "react";
+
 import { ApplicationDialog } from "@/components/application-dialog";
 import { DeleteApplicationDialog } from "@/components/delete-application-dialog";
+import { DeleteWatchlistDialog } from "@/components/delete-watchlist-dialog";
 import {
   ImportErrorDialog,
   ImportReplaceDialog,
@@ -9,9 +12,14 @@ import {
 import { MetricsCards } from "@/components/metrics-cards";
 import { PageHeader } from "@/components/page-header";
 import { PipelineTable } from "@/components/pipeline-table";
+import { type PipelineView, pipelineViewStorageKey } from "@/components/pipeline-tabs";
 import { TimelineDialog } from "@/components/timeline-dialog";
+import { WatchlistDialog } from "@/components/watchlist-dialog";
+import { WatchlistTable } from "@/components/watchlist-table";
 import { useApplications } from "@/hooks/use-applications";
+import { useWatchlist } from "@/hooks/use-watchlist";
 import { blank } from "@/lib/pipeline";
+import { applicationFromWatchlist, blankWatchlist } from "@/lib/watchlist";
 
 export default function Home() {
   const {
@@ -52,9 +60,23 @@ export default function Home() {
     setImportError,
     exportData,
   } = useApplications();
+  const watchlist = useWatchlist();
+  const [view, setView] = useState<PipelineView>("applications");
+  const [viewReady, setViewReady] = useState(false);
+
+  useEffect(() => {
+    const stored = localStorage.getItem(pipelineViewStorageKey);
+    if (stored === "watchlist") setView("watchlist");
+    setViewReady(true);
+  }, []);
+  useEffect(() => {
+    if (viewReady) localStorage.setItem(pipelineViewStorageKey, view);
+  }, [view, viewReady]);
+
+  const showApplications = () => setView("applications");
 
   return (
-    <main className="mx-auto max-w-7xl px-4 py-8 pb-16 sm:px-7">
+    <main className="mx-auto flex h-svh max-w-7xl flex-col overflow-hidden px-4 py-8 sm:px-7">
       <PageHeader />
       <MetricsCards
         activeCount={active.length}
@@ -66,37 +88,62 @@ export default function Home() {
         stageFilter={stageFilter}
         actionFilter={actionFilter}
         onActiveOpportunities={() => {
+          showApplications();
           setHideClosed(true);
           setQuery("");
           setStageFilter("all");
           setActionFilter("all");
         }}
-        onActionFilter={setActionFilter}
+        onActionFilter={(value) => {
+          showApplications();
+          setActionFilter(value);
+        }}
       />
-      {/* <WeeklyReality active={active} applications={applications} /> */}
-      <PipelineTable
-        applications={visible}
-        query={query}
-        onQueryChange={setQuery}
-        stageFilter={stageFilter}
-        onStageFilterChange={setStageFilter}
-        actionFilter={actionFilter}
-        onActionFilterChange={setActionFilter}
-        hideClosed={hideClosed}
-        onHideClosedChange={setHideClosed}
-        sort={sort}
-        onSort={toggleSort}
-        onEdit={setEditing}
-        onStageChange={updateStage}
-        onStatusChange={updateStatus}
-        onFitChange={updateFit}
-        onSentimentChange={updateSentiment}
-        onTimeline={setTimelineId}
-        onDelete={setPendingDelete}
-        onExport={exportData}
-        onImport={importData}
-        onAdd={() => setEditing(blank())}
-      />
+      {view === "watchlist" ? (
+        <WatchlistTable
+          items={watchlist.visible}
+          query={watchlist.query}
+          onQueryChange={watchlist.setQuery}
+          sort={watchlist.sort}
+          onSort={watchlist.toggleSort}
+          view={view}
+          onViewChange={setView}
+          onAdd={() => watchlist.setEditing(blankWatchlist())}
+          onApplied={(item) => {
+            upsertApplication(applicationFromWatchlist(item));
+            watchlist.deleteItem(item.id);
+            showApplications();
+          }}
+          onEdit={watchlist.setEditing}
+          onDelete={watchlist.setPendingDelete}
+        />
+      ) : (
+        <PipelineTable
+          applications={visible}
+          query={query}
+          onQueryChange={setQuery}
+          stageFilter={stageFilter}
+          onStageFilterChange={setStageFilter}
+          actionFilter={actionFilter}
+          onActionFilterChange={setActionFilter}
+          hideClosed={hideClosed}
+          onHideClosedChange={setHideClosed}
+          sort={sort}
+          onSort={toggleSort}
+          onEdit={setEditing}
+          onStageChange={updateStage}
+          onStatusChange={updateStatus}
+          onFitChange={updateFit}
+          onSentimentChange={updateSentiment}
+          onTimeline={setTimelineId}
+          onDelete={setPendingDelete}
+          onExport={exportData}
+          onImport={importData}
+          onAdd={() => setEditing(blank())}
+          view={view}
+          onViewChange={setView}
+        />
+      )}
       <ApplicationDialog
         application={editing}
         onClose={() => setEditing(null)}
@@ -113,6 +160,24 @@ export default function Home() {
           !!editing && !applications.some((item) => item.id === editing.id)
         }
       />
+      <WatchlistDialog
+        item={watchlist.editing}
+        onClose={() => watchlist.setEditing(null)}
+        onSave={watchlist.saveItem}
+        onDelete={
+          watchlist.editing &&
+          watchlist.items.some((item) => item.id === watchlist.editing?.id)
+            ? () => {
+                watchlist.setPendingDelete(watchlist.editing);
+                watchlist.setEditing(null);
+              }
+            : undefined
+        }
+        isNew={
+          !!watchlist.editing &&
+          !watchlist.items.some((item) => item.id === watchlist.editing?.id)
+        }
+      />
       <TimelineDialog
         application={timelineApplication}
         onClose={() => setTimelineId(null)}
@@ -123,6 +188,14 @@ export default function Home() {
         onOpenChange={(open) => !open && setPendingDelete(null)}
         onConfirm={() =>
           pendingDelete && deleteApplication(pendingDelete.id)
+        }
+      />
+      <DeleteWatchlistDialog
+        item={watchlist.pendingDelete}
+        onOpenChange={(open) => !open && watchlist.setPendingDelete(null)}
+        onConfirm={() =>
+          watchlist.pendingDelete &&
+          watchlist.deleteItem(watchlist.pendingDelete.id)
         }
       />
       <ImportReplaceDialog

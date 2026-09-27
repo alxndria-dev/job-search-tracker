@@ -128,4 +128,16 @@
   html {
     @apply font-sans;
     }
+  button:not(:disabled),
+  [role="button"]:not([aria-disabled="true"]),
+  [role="tab"],
+  [role="switch"]:not([data-disabled]),
+  [role="combobox"]:not(:disabled),
+  [role="option"]:not([data-disabled]),
+  [role="menuitem"],
+  a[href],
+  label[for],
+  summary {
+    cursor: pointer;
+  }
 }
