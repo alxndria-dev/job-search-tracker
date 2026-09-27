@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="An honest, local-first job application tracker." />
+    <title>Huntr — Job Search Tracker</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&display=swap" rel="stylesheet" />
+  </head>
+  <body>
+    <main class="shell">
+      <header class="topbar">
+        <div>
+          <p class="eyebrow">JOB SEARCH, WITHOUT THE SELF-DECEPTION</p>
+          <h1>Huntr</h1>
+        </div>
+        <div class="header-actions">
+          <button class="button button-secondary" id="export-button">Export data</button>
+          <button class="button button-primary" id="add-button">Add application</button>
+        </div>
+      </header>
+
+      <section class="hero" aria-labelledby="hero-title">
+        <div>
+          <p class="eyebrow">YOUR NEXT SEVEN DAYS</p>
+          <h2 id="hero-title">Do the work that can still change the outcome.</h2>
+          <p id="hero-copy">Loading your pipeline…</p>
+        </div>
+        <button class="hero-action" id="focus-action">View priority actions <span aria-hidden="true">→</span></button>
+      </section>
+
+      <section class="metric-grid" aria-label="Pipeline summary" id="metrics"></section>
+
+      <section class="panel reality-panel" aria-labelledby="reality-title">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">WEEKLY REALITY CHECK</p>
+            <h2 id="reality-title">What the pipeline is telling you</h2>
+          </div>
+          <span class="privacy-note">Stored only in this browser</span>
+        </div>
+        <div class="reality-grid" id="reality-check"></div>
+      </section>
+
+      <section class="panel applications-panel" aria-labelledby="applications-title">
+        <div class="section-heading applications-heading">
+          <div>
+            <p class="eyebrow">PIPELINE</p>
+            <h2 id="applications-title">Applications</h2>
+          </div>
+          <div class="filters" aria-label="Application filters">
+            <label class="search-field">
+              <span class="sr-only">Search applications</span>
+              <input id="search" type="search" placeholder="Search company or role" />
+            </label>
+            <label>
+              <span class="sr-only">Filter by status</span>
+              <select id="stage-filter">
+                <option value="all">All stages</option>
+                <option value="applied">Applied</option>
+                <option value="screen">Screen</option>
+                <option value="interview">Interview</option>
+                <option value="final">Final</option>
+                <option value="offer">Offer</option>
+                <option value="rejected">Rejected</option>
+                <option value="closed">Closed</option>
+              </select>
+            </label>
+            <label>
+              <span class="sr-only">Filter by action state</span>
+              <select id="action-filter">
+                <option value="all">Any action state</option>
+                <option value="due">Action due</option>
+                <option value="stale">Likely cold</option>
+                <option value="none">No next action</option>
+              </select>
+            </label>
+          </div>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr><th>Opportunity</th><th>Stage</th><th>Fit</th><th>Next action</th><th>Follow-up</th><th></th></tr>
+            </thead>
+            <tbody id="application-list"></tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+
+    <dialog id="application-dialog" aria-labelledby="dialog-title">
+      <form method="dialog" id="application-form">
+        <div class="dialog-heading">
+          <div><p class="eyebrow">APPLICATION</p><h2 id="dialog-title">Add application</h2></div>
+          <button class="icon-button" value="cancel" aria-label="Close">×</button>
+        </div>
+        <input type="hidden" id="application-id" name="id" />
+        <div class="form-grid">
+          <label>Company<input required id="company" name="company" placeholder="e.g. Linear" /></label>
+          <label>Role<input required id="role" name="role" placeholder="e.g. Staff Product Designer" /></label>
+          <label>Stage<select id="stage" name="stage"><option value="applied">Applied</option><option value="screen">Screen</option><option value="interview">Interview</option><option value="final">Final</option><option value="offer">Offer</option><option value="rejected">Rejected</option><option value="closed">Closed</option></select></label>
+          <label>Fit score (1–5)<select id="fit" name="fit"><option value="5">5 — strong evidence</option><option value="4">4 — strong</option><option value="3">3 — plausible</option><option value="2">2 — stretch</option><option value="1">1 — speculative</option></select></label>
+          <label>Applied date<input id="applied-date" name="appliedDate" type="date" /></label>
+          <label>Follow-up date<input id="follow-up-date" name="followUpDate" type="date" /></label>
+          <label class="full">Next action<input id="next-action" name="nextAction" placeholder="e.g. Follow up with recruiter" /></label>
+          <label class="full">Evidence of fit<textarea id="fit-evidence" name="fitEvidence" rows="3" placeholder="Specific evidence, not a feeling."></textarea></label>
+          <label class="full">Risks / gaps<textarea id="risks" name="risks" rows="2" placeholder="What may make this a poor use of time?"></textarea></label>
+          <label class="full">What I learned<textarea id="learning" name="learning" rows="2" placeholder="Add after a screen, interview or outcome."></textarea></label>
+        </div>
+        <div class="dialog-actions"><button class="button button-secondary" value="cancel">Cancel</button><button class="button button-primary" id="save-button" value="default">Save application</button></div>
+      </form>
+    </dialog>
+    <input id="import-input" type="file" accept="application/json" hidden />
+    <script src="app.js"></script>
+  </body>
+</html>
