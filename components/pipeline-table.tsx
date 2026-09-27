@@ -191,7 +191,7 @@ export function PipelineTable({
       }
     >
         <Table className="min-w-[920px]">
-          <TableHeader className="sticky top-0 z-10 bg-card">
+          <TableHeader>
             <TableRow>
               <SortableHead
                 column="opportunity"

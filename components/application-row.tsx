@@ -33,7 +33,7 @@ const nextActionPreviewLength = 100;
 
 function NextActionCell({ value }: { value: string }) {
   if (!value) {
-    return <em className="text-muted-foreground">Not defined</em>;
+    return <em className="text-muted-foreground">—</em>;
   }
   const truncated = value.length > nextActionPreviewLength;
   const preview = truncated
