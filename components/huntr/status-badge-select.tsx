@@ -13,11 +13,11 @@ import { statusItems } from "@/lib/select-options";
 import { cn } from "@/lib/utils";
 
 const statusBadgeClass: Record<ApplicationStatus, string> = {
-  active: "bg-green-200 text-green-800 dark:bg-green-600 dark:text-green-100",
+  active: "bg-green-200 text-green-800 dark:bg-green-700 dark:text-green-100",
   on_hold: "bg-zinc-200 text-zinc-800 dark:bg-zinc-500 dark:text-zinc-100",
-  rejected: "bg-red-200 text-red-800 dark:bg-red-600 dark:text-red-100",
+  rejected: "bg-red-200 text-red-800 dark:bg-red-700 dark:text-red-100",
   withdrawn: "bg-violet-200 text-violet-800 dark:bg-violet-600 dark:text-violet-100",
-  ghosted: "bg-red-300 text-red-800 dark:bg-red-950 dark:text-red-100",
+  ghosted: "bg-red-300 text-red-800 dark:bg-red-900 dark:text-red-100",
   no_response: "bg-zinc-300 text-zinc-800 dark:bg-zinc-600 dark:text-zinc-100",
   other: "bg-sky-200 text-sky-800 dark:bg-sky-600 dark:text-sky-100",
 };

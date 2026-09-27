@@ -1,6 +1,7 @@
 import { useRef } from "react";
 import { Download, Plus, Upload } from "lucide-react";
 
+import { ThemeToggle } from "@/components/huntr/theme-toggle";
 import { Button } from "@/components/ui/button";
 
 export function PageHeader({
@@ -54,6 +55,7 @@ export function PageHeader({
           <Plus />
           Add application
         </Button>
+        <ThemeToggle />
       </div>
     </header>
   );
