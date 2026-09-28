@@ -22,7 +22,7 @@ export function PipelineTabs({
     <div
       role="tablist"
       aria-label="Pipeline views"
-      className="flex w-full items-end justify-center gap-1 px-px max-sm:ml-0 sm:ml-10 sm:w-auto sm:justify-start"
+      className="flex w-full items-end justify-center gap-1 px-px max-md:ml-0 md:ml-10 md:w-auto md:justify-start"
     >
       {tabs.map((tab) => {
         const selected = view === tab.id;
@@ -66,8 +66,8 @@ export function PipelinePanel({
 }) {
   return (
     <section className="mt-5 flex min-h-0 flex-1 flex-col">
-      <div className="flex shrink-0 flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between">
-        <div className="flex w-full flex-wrap justify-end gap-2.5 sm:order-2 sm:w-auto">
+      <div className="flex shrink-0 flex-col gap-3 md:flex-row md:flex-wrap md:items-center md:justify-between">
+        <div className="flex w-full flex-wrap justify-end gap-2.5 md:order-2 md:w-auto">
           {toolbar}
         </div>
         <PipelineTabs view={view} onViewChange={onViewChange} />

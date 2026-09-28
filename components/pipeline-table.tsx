@@ -102,7 +102,7 @@ export function PipelineTable({
             />
             <Button
               variant="outline"
-              className="flex-1 sm:flex-none"
+              className="flex-1 md:flex-none"
               onClick={() => fileInput.current?.click()}
             >
               <Upload />
@@ -110,21 +110,21 @@ export function PipelineTable({
             </Button>
             <Button
               variant="outline"
-              className="flex-1 sm:flex-none"
+              className="flex-1 md:flex-none"
               onClick={onExport}
             >
               <Download />
               Export data
             </Button>
-            <Button className="flex-1 sm:flex-none" onClick={onAdd}>
+            <Button className="flex-1 md:flex-none" onClick={onAdd}>
               <Plus />
               Add application
             </Button>
         </>
       }
       filters={
-        <div className="flex w-full flex-col gap-2.5 sm:flex-row sm:flex-wrap">
-          <div className="relative w-full min-w-0 sm:min-w-52 sm:flex-1">
+        <div className="flex w-full flex-col gap-2.5 md:flex-row md:flex-wrap">
+          <div className="relative w-full min-w-0 md:min-w-52 md:flex-1">
             <Search className="pointer-events-none absolute top-1/2 left-2.5 size-4 -translate-y-1/2 text-muted-foreground" />
             <Input
               value={query}
@@ -134,7 +134,7 @@ export function PipelineTable({
               className="pl-8"
             />
           </div>
-          <div className="flex w-full flex-wrap gap-2.5 sm:contents">
+          <div className="flex w-full flex-wrap gap-2.5 md:contents">
           <Select
             value={stageFilter}
             onValueChange={(value) => {
@@ -144,7 +144,7 @@ export function PipelineTable({
           >
             <SelectTrigger
               aria-label="Filter by current stage"
-              className="min-w-40 flex-1 sm:flex-none"
+              className="min-w-40 flex-1 md:flex-none"
             >
               <SelectValue />
             </SelectTrigger>
@@ -165,7 +165,7 @@ export function PipelineTable({
           >
             <SelectTrigger
               aria-label="Filter by action state"
-              className="min-w-40 flex-1 sm:flex-none"
+              className="min-w-40 flex-1 md:flex-none"
             >
               <SelectValue />
             </SelectTrigger>

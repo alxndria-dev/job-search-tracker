@@ -48,13 +48,13 @@ export function WatchlistTable({
       view={view}
       onViewChange={onViewChange}
       toolbar={
-        <Button className="flex-1 sm:flex-none" onClick={onAdd}>
+        <Button className="flex-1 md:flex-none" onClick={onAdd}>
           <Plus />
           Add to watchlist
         </Button>
       }
       filters={
-        <div className="relative w-full min-w-0 sm:max-w-sm">
+        <div className="relative w-full min-w-0 md:max-w-sm">
           <Search className="pointer-events-none absolute top-1/2 left-2.5 size-4 -translate-y-1/2 text-muted-foreground" />
           <Input
             value={query}
