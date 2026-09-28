@@ -123,8 +123,8 @@ export function PipelineTable({
         </>
       }
       filters={
-        <div className="flex w-full flex-wrap gap-2.5">
-          <div className="relative min-w-0 flex-1 sm:min-w-52">
+        <div className="flex w-full flex-col gap-2.5 sm:flex-row sm:flex-wrap">
+          <div className="relative w-full min-w-0 sm:min-w-52 sm:flex-1">
             <Search className="pointer-events-none absolute top-1/2 left-2.5 size-4 -translate-y-1/2 text-muted-foreground" />
             <Input
               value={query}
@@ -134,6 +134,7 @@ export function PipelineTable({
               className="pl-8"
             />
           </div>
+          <div className="flex w-full flex-wrap gap-2.5 sm:contents">
           <Select
             value={stageFilter}
             onValueChange={(value) => {
@@ -186,6 +187,7 @@ export function PipelineTable({
             <Label htmlFor="hide-closed" className="text-sm font-normal">
               Hide closed
             </Label>
+          </div>
           </div>
         </div>
       }

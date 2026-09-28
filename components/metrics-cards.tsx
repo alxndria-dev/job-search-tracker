@@ -78,30 +78,30 @@ export function MetricsCards({
   ] as const;
 
   return (
-    <section className="mt-5 grid shrink-0 grid-cols-1 gap-3.5 sm:grid-cols-2 lg:grid-cols-4">
+    <section className="mt-5 grid shrink-0 grid-cols-4 gap-2 lg:gap-3.5">
       {cards.map((card) => (
         <button
           key={card.id}
           type="button"
           onClick={card.onClick}
           aria-pressed={card.pressed}
-          className="rounded-xl text-left outline-none focus-visible:ring-3 focus-visible:ring-ring/50"
+          className="min-w-0 rounded-xl text-left outline-none focus-visible:ring-3 focus-visible:ring-ring/50"
         >
           <Card
             className={cn(
-              "h-full cursor-pointer transition-shadow hover:ring-foreground/20",
+              "h-full cursor-pointer [--card-spacing:--spacing(2)] transition-shadow hover:ring-foreground/20 lg:[--card-spacing:--spacing(4)]",
               card.pressed && "ring-foreground/25",
             )}
           >
-            <CardHeader>
-              <CardDescription className="font-mono text-[11px] tracking-[0.08em] uppercase">
+            <CardHeader className="gap-1 max-lg:min-h-16 max-lg:flex-1 max-lg:[grid-template-rows:auto_1fr]">
+              <CardDescription className="font-mono text-[9px] leading-tight tracking-[0.06em] uppercase sm:text-[11px] sm:tracking-[0.08em]">
                 {card.label}
               </CardDescription>
-              <CardTitle className="text-4xl tracking-tight">
+              <CardTitle className="text-2xl tracking-tight max-lg:self-end sm:text-3xl lg:text-4xl">
                 {card.number}
               </CardTitle>
             </CardHeader>
-            <CardContent>
+            <CardContent className="hidden lg:block">
               <p className="text-sm text-muted-foreground">{card.copy}</p>
             </CardContent>
           </Card>
