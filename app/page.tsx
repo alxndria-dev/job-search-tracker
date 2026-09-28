@@ -178,10 +178,6 @@ export default function Home() {
               }
             : undefined
         }
-        isNew={
-          !!watchlist.editing &&
-          !watchlist.items.some((item) => item.id === watchlist.editing?.id)
-        }
       />
       <TimelineDialog
         application={timelineApplication}
