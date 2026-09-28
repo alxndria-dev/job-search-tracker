@@ -1,19 +1,29 @@
 import { Pencil, Trash2 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { TableCell, TableRow } from "@/components/ui/table";
 import { formatDayMonth } from "@/lib/applications";
+import { fitItems, fitScores } from "@/lib/select-options";
 import { type WatchlistItem, watchlistHref } from "@/lib/watchlist";
 
 export function WatchlistRow({
   item,
   onApplied,
   onEdit,
+  onFitChange,
   onDelete,
 }: {
   item: WatchlistItem;
   onApplied: () => void;
   onEdit: () => void;
+  onFitChange: (fit: number) => void;
   onDelete: () => void;
 }) {
   const href = watchlistHref(item.jobUrl);
@@ -38,6 +48,30 @@ export function WatchlistRow({
       </TableCell>
       <TableCell className="text-muted-foreground tabular-nums">
         {formatDayMonth(item.addedDate) || "—"}
+      </TableCell>
+      <TableCell>
+        <Select
+          value={String(item.fit)}
+          onValueChange={(value) => {
+            if (value) onFitChange(Number(value));
+          }}
+          items={fitItems}
+        >
+          <SelectTrigger
+            size="sm"
+            aria-label={`Change fit score for ${item.company}`}
+            className="min-w-14 tabular-nums"
+          >
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent alignItemWithTrigger={false} align="start">
+            {fitScores.map((score) => (
+              <SelectItem value={score} key={score}>
+                {score}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
       </TableCell>
       <TableCell className="text-right">
         <div className="flex items-center justify-end gap-1">

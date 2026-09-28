@@ -3,7 +3,7 @@
 import { FormEvent, useEffect, useState } from "react";
 import { Trash2 } from "lucide-react";
 
-import { Field } from "@/components/form-fields";
+import { Field, TextAreaField } from "@/components/form-fields";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -13,6 +13,15 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { fitGuide, fitItems, fitScores } from "@/lib/select-options";
 import { type WatchlistItem } from "@/lib/watchlist";
 
 export function WatchlistDialog({
@@ -48,12 +57,15 @@ export function WatchlistDialog({
       company,
       role: String(values.get("role")).trim(),
       jobUrl: String(values.get("jobUrl")).trim(),
+      fit: Number(values.get("fit")) || draft.fit,
+      fitEvidence: String(values.get("fitEvidence")).trim(),
+      risks: String(values.get("risks")).trim(),
     });
   };
   return (
     <Dialog open={!!item} onOpenChange={(open) => !open && onClose()}>
       {draft ? (
-        <DialogContent className="sm:max-w-lg">
+        <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-2xl">
           <form noValidate onSubmit={saveDraft} key={draft.id}>
           <DialogHeader>
             <DialogTitle>
@@ -79,6 +91,42 @@ export function WatchlistDialog({
               className="sm:col-span-2"
               placeholder="https://"
               inputMode="url"
+            />
+            <div className="grid gap-2 sm:col-span-2">
+              <Label htmlFor="fit">Fit score (1–5)</Label>
+              <Select
+                name="fit"
+                defaultValue={String(draft.fit)}
+                items={fitItems}
+              >
+                <SelectTrigger id="fit" className="w-full tabular-nums">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {fitScores.map((score) => (
+                    <SelectItem value={score} key={score}>
+                      {score}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              <p className="text-xs text-muted-foreground">
+                {fitGuide
+                  .map(([score, meaning]) => `${score} ${meaning}`)
+                  .join(" · ")}
+              </p>
+            </div>
+            <TextAreaField
+              name="fitEvidence"
+              label="Evidence of fit"
+              value={draft.fitEvidence}
+              placeholder="Specific evidence, not a feeling."
+            />
+            <TextAreaField
+              name="risks"
+              label="Risks / gaps"
+              value={draft.risks}
+              placeholder="What may make this a poor use of time?"
             />
           </div>
           <DialogFooter>

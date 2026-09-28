@@ -115,6 +115,7 @@ export default function Home() {
             showApplications();
           }}
           onEdit={watchlist.setEditing}
+          onFitChange={(item, fit) => watchlist.updateFit(item.id, fit)}
           onDelete={watchlist.setPendingDelete}
         />
       ) : (
@@ -162,6 +163,10 @@ export default function Home() {
       />
       <WatchlistDialog
         item={watchlist.editing}
+        isNew={
+          !!watchlist.editing &&
+          !watchlist.items.some((item) => item.id === watchlist.editing?.id)
+        }
         onClose={() => watchlist.setEditing(null)}
         onSave={watchlist.saveItem}
         onDelete={

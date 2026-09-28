@@ -27,6 +27,7 @@ export function WatchlistTable({
   onAdd,
   onApplied,
   onEdit,
+  onFitChange,
   onDelete,
 }: {
   items: WatchlistItem[];
@@ -39,6 +40,7 @@ export function WatchlistTable({
   onAdd: () => void;
   onApplied: (item: WatchlistItem) => void;
   onEdit: (item: WatchlistItem) => void;
+  onFitChange: (item: WatchlistItem, fit: number) => void;
   onDelete: (item: WatchlistItem) => void;
 }) {
   return (
@@ -79,6 +81,12 @@ export function WatchlistTable({
                 sort={sort}
                 onSort={onSort}
               />
+              <SortableHead
+                column="fit"
+                label="Fit"
+                sort={sort}
+                onSort={onSort}
+              />
               <TableHead className="text-right">Actions</TableHead>
             </TableRow>
           </TableHeader>
@@ -90,12 +98,13 @@ export function WatchlistTable({
                   key={item.id}
                   onApplied={() => onApplied(item)}
                   onEdit={() => onEdit(item)}
+                  onFitChange={(fit) => onFitChange(item, fit)}
                   onDelete={() => onDelete(item)}
                 />
               ))
             ) : (
               <TableRow>
-                <TableCell colSpan={3} className="text-muted-foreground">
+                <TableCell colSpan={4} className="text-muted-foreground">
                   No watchlist items match these filters.
                 </TableCell>
               </TableRow>

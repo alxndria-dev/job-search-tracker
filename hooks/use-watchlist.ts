@@ -38,7 +38,8 @@ export function useWatchlist() {
     if (!sort) return filtered;
     const direction = sort.direction === "asc" ? 1 : -1;
     const column = sort.column;
-    if (column !== "opportunity" && column !== "added") return filtered;
+    if (column !== "opportunity" && column !== "added" && column !== "fit")
+      return filtered;
     return [...filtered].sort(
       (a, b) => compareWatchlist(a, b, column) * direction,
     );
@@ -61,6 +62,12 @@ export function useWatchlist() {
     setEditing(null);
   };
 
+  const updateFit = (id: string, fit: number) => {
+    setItems((current) =>
+      current.map((item) => (item.id === id ? { ...item, fit } : item)),
+    );
+  };
+
   const deleteItem = (id: string) => {
     setItems((current) => current.filter((item) => item.id !== id));
     if (editing?.id === id) setEditing(null);
@@ -79,6 +86,7 @@ export function useWatchlist() {
     pendingDelete,
     setPendingDelete,
     saveItem,
+    updateFit,
     deleteItem,
   };
 }

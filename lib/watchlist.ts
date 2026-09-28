@@ -13,6 +13,9 @@ export type WatchlistItem = {
   role: string;
   jobUrl: string;
   addedDate: string;
+  fit: number;
+  fitEvidence: string;
+  risks: string;
 };
 
 export const watchlistStorageKey = "jobtrackr-watchlist-v1";
@@ -34,12 +37,21 @@ const sanitizeIsoDate = (value: string, fallback: string) => {
   return isoDatePattern.test(trimmed) ? trimmed : fallback;
 };
 
+const sanitizeFit = (value: unknown) => {
+  const n = typeof value === "number" ? value : Number(value);
+  if (!Number.isFinite(n)) return 3;
+  return Math.min(5, Math.max(1, Math.round(n)));
+};
+
 export const blankWatchlist = (): WatchlistItem => ({
   id: crypto.randomUUID(),
   company: "",
   role: "",
   jobUrl: "",
   addedDate: toISO(today),
+  fit: 3,
+  fitEvidence: "",
+  risks: "",
 });
 
 export const applicationFromWatchlist = (
@@ -49,6 +61,9 @@ export const applicationFromWatchlist = (
   company: item.company,
   role: item.role,
   jobUrl: item.jobUrl,
+  fit: item.fit,
+  fitEvidence: item.fitEvidence,
+  risks: item.risks,
 });
 
 export const normalizeWatchlistItem = (
@@ -59,6 +74,9 @@ export const normalizeWatchlistItem = (
   role: clip(item.role.trim(), IMPORT_LIMITS.maxShort),
   jobUrl: clip(item.jobUrl.trim(), IMPORT_LIMITS.maxUrl),
   addedDate: sanitizeIsoDate(item.addedDate, toISO(today)),
+  fit: sanitizeFit(item.fit),
+  fitEvidence: clip(item.fitEvidence.trim(), IMPORT_LIMITS.maxText),
+  risks: clip(item.risks.trim(), IMPORT_LIMITS.maxText),
 });
 
 const isRecord = (value: unknown): value is Record<string, unknown> =>
@@ -82,6 +100,10 @@ export const parseWatchlistPayload = (parsed: unknown): WatchlistItem[] => {
         role: typeof item.role === "string" ? item.role : "",
         jobUrl: typeof item.jobUrl === "string" ? item.jobUrl : "",
         addedDate: typeof item.addedDate === "string" ? item.addedDate : "",
+        fit: sanitizeFit(item.fit),
+        fitEvidence:
+          typeof item.fitEvidence === "string" ? item.fitEvidence : "",
+        risks: typeof item.risks === "string" ? item.risks : "",
       }),
     ];
   });
@@ -102,9 +124,10 @@ export const watchlistHref = jobUrlHref;
 export const compareWatchlist = (
   a: WatchlistItem,
   b: WatchlistItem,
-  column: "opportunity" | "added",
+  column: "opportunity" | "added" | "fit",
 ) => {
   if (column === "added") return a.addedDate.localeCompare(b.addedDate);
+  if (column === "fit") return a.fit - b.fit;
   return (
     a.company.localeCompare(b.company, undefined, { sensitivity: "base" }) ||
     a.role.localeCompare(b.role, undefined, { sensitivity: "base" })
@@ -123,6 +146,9 @@ export const watchlistSeed: WatchlistItem[] = [
     role: "Product Designer",
     jobUrl: "https://mossreed.example/jobs/product-designer",
     addedDate: offset(-2),
+    fit: 4,
+    fitEvidence: "Editorial product, strong craft, design-eng pairing.",
+    risks: "Headcount may wait until next quarter.",
   },
   {
     id: "bluekiln",
@@ -130,6 +156,9 @@ export const watchlistSeed: WatchlistItem[] = [
     role: "",
     jobUrl: "https://bluekiln.example/careers",
     addedDate: offset(-8),
+    fit: 2,
+    fitEvidence: "",
+    risks: "No open role posted yet; company-only watch.",
   },
   {
     id: "paperroute",
@@ -137,5 +166,8 @@ export const watchlistSeed: WatchlistItem[] = [
     role: "Senior Product Designer",
     jobUrl: "",
     addedDate: offset(-14),
+    fit: 5,
+    fitEvidence: "Logistics ops tools, dense tables, high bar for systems.",
+    risks: "",
   },
 ];
