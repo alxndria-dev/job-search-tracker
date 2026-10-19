@@ -69,3 +69,7 @@ Open [http://localhost:3000](http://localhost:3000).
 ## Status
 
 This is an active product experiment exploring how better information design can make a job search more deliberate, less emotionally noisy, and easier to learn from.
+
+## What's Next
+
+AI interaction with the data and live suggestions and feedback.
