@@ -19,6 +19,7 @@ export type WatchlistItem = {
 };
 
 export const watchlistStorageKey = "jobtrackr-watchlist-v1";
+export const watchlistExportKind = "jobtrackr-watchlist";
 
 const isoDatePattern = /^\d{4}-\d{2}-\d{2}$/;
 
@@ -107,6 +108,36 @@ export const parseWatchlistPayload = (parsed: unknown): WatchlistItem[] => {
       }),
     ];
   });
+};
+
+const notWatchlistExport =
+  "This file is not a JobTrackr watchlist export. Use a JSON file created with Export watchlist.";
+
+export const parseImportedWatchlist = (text: string): WatchlistItem[] => {
+  if (text.length > IMPORT_LIMITS.maxBytes) {
+    throw new Error("This file is too large to import.");
+  }
+  let parsed: unknown;
+  try {
+    parsed = JSON.parse(text);
+  } catch {
+    throw new Error("This file is not valid JSON.");
+  }
+  if (
+    !isRecord(parsed) ||
+    parsed.kind !== watchlistExportKind ||
+    !Array.isArray(parsed.items)
+  ) {
+    throw new Error(notWatchlistExport);
+  }
+  if (parsed.items.length > IMPORT_LIMITS.maxApplications) {
+    throw new Error(
+      `This file has too many records. Import at most ${IMPORT_LIMITS.maxApplications} watchlist items.`,
+    );
+  }
+  const items = parseWatchlistPayload(parsed.items);
+  if (!items.length) throw new Error(notWatchlistExport);
+  return items;
 };
 
 export const loadWatchlist = (seed: WatchlistItem[]): WatchlistItem[] => {

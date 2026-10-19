@@ -153,7 +153,9 @@ export function useApplications() {
         throw new Error("This file is too large to import.");
       }
       if (!isLikelyJsonImportFile(file)) {
-        throw new Error("Import only accepts a JSON file from Export data.");
+        throw new Error(
+          "Import only accepts a JSON file from Export applications.",
+        );
       }
       const imported = parseImportedApplications(
         await file.text(),

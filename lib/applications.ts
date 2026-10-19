@@ -490,7 +490,7 @@ export const parseImportedApplications = (
   }
   if (!Array.isArray(parsed)) {
     throw new Error(
-      "This file is not a JobTrackr export. Use a JSON file created with Export data.",
+      "This file is not a JobTrackr export. Use a JSON file created with Export applications.",
     );
   }
   if (parsed.length > IMPORT_LIMITS.maxApplications) {
@@ -508,7 +508,7 @@ export const parseImportedApplications = (
   });
   if (!migrated.length) {
     throw new Error(
-      "This file is not a JobTrackr export. Use a JSON file created with Export data.",
+      "This file is not a JobTrackr export. Use a JSON file created with Export applications.",
     );
   }
   return migrated;

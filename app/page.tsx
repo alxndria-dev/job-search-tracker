@@ -108,6 +108,8 @@ export default function Home() {
           onSort={watchlist.toggleSort}
           view={view}
           onViewChange={setView}
+          onExport={watchlist.exportData}
+          onImport={watchlist.importData}
           onAdd={() => watchlist.setEditing(blankWatchlist())}
           onApplied={(item) => {
             upsertApplication(applicationFromWatchlist(item));
@@ -200,13 +202,24 @@ export default function Home() {
         }
       />
       <ImportReplaceDialog
-        applications={pendingImport}
+        records={pendingImport}
+        kind="applications"
         onOpenChange={(open) => !open && setPendingImport(null)}
         onConfirm={confirmImport}
+      />
+      <ImportReplaceDialog
+        records={watchlist.pendingImport}
+        kind="watchlist"
+        onOpenChange={(open) => !open && watchlist.setPendingImport(null)}
+        onConfirm={watchlist.confirmImport}
       />
       <ImportErrorDialog
         message={importError}
         onOpenChange={(open) => !open && setImportError(null)}
+      />
+      <ImportErrorDialog
+        message={watchlist.importError}
+        onOpenChange={(open) => !open && watchlist.setImportError(null)}
       />
     </main>
   );

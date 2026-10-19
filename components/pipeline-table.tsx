@@ -106,7 +106,7 @@ export function PipelineTable({
               onClick={() => fileInput.current?.click()}
             >
               <Upload />
-              Import data
+              Import applications
             </Button>
             <Button
               variant="outline"
@@ -114,7 +114,7 @@ export function PipelineTable({
               onClick={onExport}
             >
               <Download />
-              Export data
+              Export applications
             </Button>
             <Button className="flex-1 md:flex-none" onClick={onAdd}>
               <Plus />

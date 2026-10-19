@@ -1,11 +1,19 @@
 import { useEffect, useMemo, useState } from "react";
 
+import {
+  IMPORT_LIMITS,
+  isLikelyJsonImportFile,
+  toISO,
+} from "@/lib/applications";
+import { today } from "@/lib/dates";
 import { type SortColumn, type SortState } from "@/lib/pipeline";
 import {
   type WatchlistItem,
   compareWatchlist,
   filterWatchlist,
   loadWatchlist,
+  parseImportedWatchlist,
+  watchlistExportKind,
   watchlistSeed,
   watchlistStorageKey,
 } from "@/lib/watchlist";
@@ -19,6 +27,10 @@ export function useWatchlist() {
   const [pendingDelete, setPendingDelete] = useState<WatchlistItem | null>(
     null,
   );
+  const [pendingImport, setPendingImport] = useState<WatchlistItem[] | null>(
+    null,
+  );
+  const [importError, setImportError] = useState<string | null>(null);
 
   useEffect(() => {
     setItems(loadWatchlist(watchlistSeed));
@@ -74,6 +86,54 @@ export function useWatchlist() {
     setPendingDelete(null);
   };
 
+  const applyImport = (imported: WatchlistItem[]) => {
+    setItems(imported);
+    setEditing(null);
+    setPendingDelete(null);
+    setPendingImport(null);
+  };
+
+  const importData = async (file: File) => {
+    try {
+      if (file.size > IMPORT_LIMITS.maxBytes) {
+        throw new Error("This file is too large to import.");
+      }
+      if (!isLikelyJsonImportFile(file)) {
+        throw new Error(
+          "Import only accepts a JSON file from Export watchlist.",
+        );
+      }
+      const imported = parseImportedWatchlist(await file.text());
+      if (items.length) {
+        setPendingImport(imported);
+        return;
+      }
+      applyImport(imported);
+    } catch (error) {
+      setImportError(
+        error instanceof Error
+          ? error.message
+          : "This file could not be imported.",
+      );
+    }
+  };
+
+  const confirmImport = () => {
+    if (pendingImport) applyImport(pendingImport);
+  };
+
+  const exportData = () => {
+    const blob = new Blob(
+      [JSON.stringify({ kind: watchlistExportKind, items }, null, 2)],
+      { type: "application/json" },
+    );
+    const link = document.createElement("a");
+    link.href = URL.createObjectURL(blob);
+    link.download = `jobtrackr-watchlist-${toISO(today)}.json`;
+    link.click();
+    URL.revokeObjectURL(link.href);
+  };
+
   return {
     items,
     query,
@@ -88,5 +148,12 @@ export function useWatchlist() {
     saveItem,
     updateFit,
     deleteItem,
+    importData,
+    pendingImport,
+    setPendingImport,
+    confirmImport,
+    importError,
+    setImportError,
+    exportData,
   };
 }

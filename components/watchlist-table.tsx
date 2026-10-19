@@ -1,4 +1,5 @@
-import { Plus, Search } from "lucide-react";
+import { useRef } from "react";
+import { Download, Plus, Search, Upload } from "lucide-react";
 
 import { PipelinePanel, type PipelineView } from "@/components/pipeline-tabs";
 import { SortableHead } from "@/components/sortable-head";
@@ -24,6 +25,8 @@ export function WatchlistTable({
   onSort,
   view,
   onViewChange,
+  onExport,
+  onImport,
   onAdd,
   onApplied,
   onEdit,
@@ -37,21 +40,54 @@ export function WatchlistTable({
   onSort: (column: SortColumn) => void;
   view: PipelineView;
   onViewChange: (view: PipelineView) => void;
+  onExport: () => void;
+  onImport: (file: File) => void;
   onAdd: () => void;
   onApplied: (item: WatchlistItem) => void;
   onEdit: (item: WatchlistItem) => void;
   onFitChange: (item: WatchlistItem, fit: number) => void;
   onDelete: (item: WatchlistItem) => void;
 }) {
+  const fileInput = useRef<HTMLInputElement>(null);
   return (
     <PipelinePanel
       view={view}
       onViewChange={onViewChange}
       toolbar={
-        <Button className="flex-1 md:flex-none" onClick={onAdd}>
-          <Plus />
-          Add to watchlist
-        </Button>
+        <>
+          <input
+            ref={fileInput}
+            type="file"
+            accept="application/json,.json"
+            className="sr-only"
+            aria-label="Import watchlist JSON"
+            onChange={(event) => {
+              const file = event.target.files?.[0];
+              if (file) onImport(file);
+              event.target.value = "";
+            }}
+          />
+          <Button
+            variant="outline"
+            className="flex-1 md:flex-none"
+            onClick={() => fileInput.current?.click()}
+          >
+            <Upload />
+            Import watchlist
+          </Button>
+          <Button
+            variant="outline"
+            className="flex-1 md:flex-none"
+            onClick={onExport}
+          >
+            <Download />
+            Export watchlist
+          </Button>
+          <Button className="flex-1 md:flex-none" onClick={onAdd}>
+            <Plus />
+            Add to watchlist
+          </Button>
+        </>
       }
       filters={
         <div className="relative w-full min-w-0 md:max-w-sm">
